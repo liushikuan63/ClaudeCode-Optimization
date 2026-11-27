@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 export const KIT_ROOT = fileURLToPath(new URL('../', import.meta.url));
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 export const SKILLS = [
-  'verify-before-claim', 'safe-text', 'backup-retention', 'api-contracts',
+  'verify-before-claim', 'safe-text', 'backup-retention', 'api-contracts', 'request-recovery', 'continuation-audit',
   'database-safety', 'rust-engineering', 'spring-mybatis', 'frontend-a11y',
   'performance-evidence', 'browser-e2e', 'windows-project-workflow',
   'github-ci-evidence', 'development-delivery', 'parallel-work',
@@ -19,9 +19,16 @@ export const PAYLOAD_FILES = [
   'agents/runtime-truth-verifier.md',
   'hooks/local-habits.mjs',
 ];
+export const RECOVERY_FILES = [
+  'extensions/request-recovery/gateway.mjs',
+  'extensions/request-recovery/README.md',
+];
 export const PACKAGE_FILES = [
   ...PAYLOAD_FILES.map(name => `payload/${name}`),
-  'payload/hooks/local-habits.test.mjs', 'rules/CLAUDE.md',
+  ...RECOVERY_FILES.map(name => `payload/${name}`),
+  'payload/hooks/local-habits.test.mjs',
+  'payload/extensions/request-recovery/gateway.test.mjs',
+  'rules/CLAUDE.md',
   'README.md', 'package.json', '.gitignore', '.gitattributes',
   'scripts/kit.mjs', 'scripts/install.mjs', 'scripts/validate.mjs',
   'tests/install.test.mjs',
@@ -148,5 +155,5 @@ export function validateKit(root = KIT_ROOT) {
   if (pkg.private !== true || pkg.dependencies || pkg.devDependencies || pkg.scripts?.postinstall) {
     throw new Error('Unexpected package dependencies or publish/install settings');
   }
-  return { files, summary: { packageFiles: names.length, skills: SKILLS.length, skillMarkdownFiles: 21, localReferences: references } };
+  return { files, summary: { packageFiles: names.length, skills: SKILLS.length, skillMarkdownFiles: 23, localReferences: references } };
 }

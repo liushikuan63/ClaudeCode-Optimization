@@ -5,7 +5,7 @@ import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { applyInstall, planInstall } from '../scripts/install.mjs';
-import { KIT_ROOT, PACKAGE_FILES, PAYLOAD_FILES, assertNoLinks, digest, inside, validateKit } from '../scripts/kit.mjs';
+import { KIT_ROOT, PACKAGE_FILES, PAYLOAD_FILES, RECOVERY_FILES, assertNoLinks, digest, inside, validateKit } from '../scripts/kit.mjs';
 
 const cli = path.join(KIT_ROOT, 'scripts/install.mjs');
 function fixture(t) {
@@ -54,8 +54,8 @@ function copyKit(target) {
   }
 }
 
-test('package allowlist, frontmatter, routes and all four local references validate', () => {
-  assert.deepEqual(validateKit().summary, { packageFiles: 33, skills: 18, skillMarkdownFiles: 21, localReferences: 4 });
+test('package allowlist, frontmatter, routes and all five local references validate', () => {
+  assert.deepEqual(validateKit().summary, { packageFiles: 38, skills: 20, skillMarkdownFiles: 23, localReferences: 5 });
 });
 
 test('preview performs zero writes, including for a missing configuration root', t => {
@@ -66,6 +66,32 @@ test('preview performs zero writes, including for a missing configuration root',
   const output = JSON.parse(execFileSync(process.execPath, [cli, '--config-dir', root], { encoding: 'utf8', windowsHide: true }));
   assert.equal(output.applied, false);
   assert.equal(fs.existsSync(root), false);
+});
+
+test('request recovery is opt-in, inert, and copies only runtime documentation', t => {
+  const { base } = fixture(t);
+  const defaultRoot = path.join(base, 'default-config');
+  applyInstall(planInstall({ configDir: defaultRoot }));
+  assert.equal(fs.existsSync(path.join(defaultRoot, RECOVERY_FILES[0])), false);
+  assert.equal(installedSettings(defaultRoot).hooks.SessionStart, undefined);
+
+  const recoveryRoot = path.join(base, 'recovery-config');
+  const preview = spawnSync(process.execPath, [cli, '--config-dir', recoveryRoot, '--with-recovery'], {
+    encoding: 'utf8', windowsHide: true,
+  });
+  assert.equal(preview.status, 0, preview.stderr);
+  assert.ok(JSON.parse(preview.stdout).changes.some(entry => entry.path === RECOVERY_FILES[0]));
+  assert.equal(fs.existsSync(recoveryRoot), false);
+
+  const plan = planInstall({ configDir: recoveryRoot, withRecovery: true });
+  assert.equal(plan.changes.length, PAYLOAD_FILES.length + RECOVERY_FILES.length + 1);
+  const report = applyInstall(plan);
+  for (const name of RECOVERY_FILES) {
+    assert.ok(report.written.includes(name));
+    assert.ok(fs.readFileSync(path.join(recoveryRoot, name)).equals(fs.readFileSync(path.join(KIT_ROOT, 'payload', name))));
+  }
+  assert.equal(fs.existsSync(path.join(recoveryRoot, 'extensions/request-recovery/gateway.test.mjs')), false);
+  assert.equal(installedSettings(recoveryRoot).hooks.SessionStart, undefined);
 });
 
 test('fresh install runs the exact generated argv in a Chinese, spaced, shell-special path', t => {

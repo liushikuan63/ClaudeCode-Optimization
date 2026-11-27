@@ -5,6 +5,8 @@ const routes = [
   ['backup-retention', /备份|回滚点|恢复原版|\bbackups?\b/i],
   ['safe-text', /乱码|编码|转义|特殊字符|换行|多行脚本|替换.{0,8}文本|\b(?:CRLF|BOM|GBK|escaping)\b/i],
   ['api-contracts', /接口契约|兼容性|幂等|游标分页|流式接口|(?<![A-Za-z0-9_])(?:SSE|WebSocket)(?![A-Za-z0-9_])|\b(?:API|idempotenc\w*|cursor[ -]pagination)\b/i],
+  ['request-recovery', /(?:请求|会话|并行任务).{0,10}(?:中断|断流|异常|失败|超时|恢复|续接|重试|终止)|(?:轮次|上下文).{0,8}(?:上限|超限|恢复|续接)|(?:异常|错误).{0,8}(?:终止|恢复|续接|重试|处理|捕获|链|汇总)|(?:吞掉|忽略|静默).{0,4}(?:异常|错误)|(?:批处理|批量).{0,8}(?:失败|异常|错误).{0,8}(?:汇总|退出码|重试)|(?:batch|exception|error)\b[\s:_-]{0,12}(?:handling|chain|swallow|aggregation|aggregate|recovery|resume)\b|(?:swallow|ignore|mask)\b.{0,12}\b(?:errors?|exceptions?)\b|\b(?:session_turn_limit_exceeded|context window limit|incomplete (?:SSE|stream|response)|request recovery|retry[ -]backoff|resume after interruption|parallel task (?:termination|crash))\b|\b(?:request|provider|stream)\b[\s:_-]{0,12}(?:failure|timeout|interruption|limit|retry|recovery|error)\b/i],
+  ['continuation-audit', /(?:接续|续接|接着(?:做|上次|之前)|继续(?:上次|上轮|之前|未完成|当前任务)|(?:恢复|核对|审计).{0,8}(?:任务|会话|进度|交付|完成状态)|(?:上次|前次).{0,8}(?:完成|任务|工作|进度)|任务.{0,8}(?:中断|接手|移交|接续)|^\s*(?:继续|接着做|resume|continue)\s*[。.!！]?\s*$|\b(?:resume task|continue where left off|continuation audit|audit prior completion|handoff recovery)\b)/i],
   ['database-safety', /数据库迁移|数据回填|数据库变更|DDL\s*锁|\b(?:schema[ -](?:migration|change)|database[ -]migration|backfill)\b/i],
   ['spring-mybatis', /事务回滚|动态\s*SQL|\b(?:Spring|MyBatis|Mapper|Transactional|N\+1)\b/i],
   ['rust-engineering', /异步\s*Rust|持锁\s*await|\b(?:Rust|Cargo\.toml|cargo|tokio)\b/i],

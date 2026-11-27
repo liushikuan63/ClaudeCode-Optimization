@@ -1,8 +1,8 @@
 # CC Workflow Kit
 
-可迁移的 Claude Code 工程协作能力包：**18 个按需技能、3 篇参考、1 个只读复核代理、1 个关键词提示 hook，以及可选协作规则**。
+可迁移的 Claude Code 工程协作能力包：**20 个按需技能、3 篇参考、1 个只读复核代理、1 个关键词提示 hook、可选协作规则，以及一个可选的请求恢复网关**。
 
-这不是整个用户配置目录的备份，也不是跨客户端插件。它不附带模型、供应商、权限、密钥、MCP、恢复进程、会话、记忆、日志或私人项目资料。安装器不联网，不启动模型或服务，不修改其他客户端。
+这不是整个用户配置目录的备份，也不是跨客户端插件。默认安装不启动或接入请求恢复网关；包中不含用户当前运行进程、模型、供应商、权限、密钥、MCP、会话、记忆、日志或私人项目资料。安装器不联网，不启动模型或服务，不修改其他客户端。
 
 ## 环境与兼容性
 
@@ -26,7 +26,7 @@ node .\scripts\validate.mjs
 npm test
 ```
 
-校验器按 33 个包文件白名单检查：18 个技能的元数据、4 条本地引用、路由清单、代理工具边界、常见凭据格式和源机器路径。该扫描不是“绝无秘密”的证明，分享前仍应审查全部文件。
+校验器按 38 个包文件白名单检查：20 个技能的元数据、5 条本地引用、路由清单、代理工具边界、常见凭据格式和源机器路径，以及可选网关文件。不运行网关。该扫描不是“绝无秘密”的证明，分享前仍应审查全部文件。
 
 ### 2. 只读预演
 
@@ -82,10 +82,26 @@ node .\scripts\install.mjs --replace --with-rules --apply
 
 `--replace` 只允许替换包内明确列出的目标，不删除未列出的文件；不意味着重新授权发布、提交、部署或执行其他动作。
 
+## 可选请求恢复网关
+
+默认预演与应用都不安装请求恢复运行时。明确选择时先预演：
+
+```powershell
+node .\scripts\install.mjs --with-recovery
+```
+
+检查差异后再应用：
+
+```powershell
+node .\scripts\install.mjs --with-recovery --apply
+```
+
+该选项只额外复制 `extensions/request-recovery/gateway.mjs` 和随附说明；不会添加 `SessionStart` hook、启动进程或改动模型、供应商、CC Switch、凭据。网关仍须由你手动启动并显式提供本地 HTTP 上游地址和未占用监听端口；它只绑定回环地址。恢复摘要会把历史对话发给同一上游并可能产生额外费用，本地检查点/诊断信息也可能敏感。默认重试有界，持续重试必须显式启用。安装和隐私边界见[网关说明](payload/extensions/request-recovery/README.md)。
+
 ## 安装行为与恢复
 
 - 先检查完整包、所有目标文件、UTF-8 JSON 和 hooks 字段结构，再进行写入。输入与生成后的每个文件均不得超过 8 MiB，超限在创建恢复点或写入前拒绝；逆序、缺失或重复的规则标记也会拒绝。拒绝路径越界、符号链接、目录联接和多硬链接目标。
-- 同字节文件跳过；保留 `settings.json` 的其他字段、所有其他事件与 hook。只新增或更新指向本包脚本的一个 `UserPromptSubmit` 路由，超时为 3 秒，不使用 shell。
+- 同字节文件跳过；保留 `settings.json` 的其他字段、所有其他事件与 hook。常规安装只新增或更新指向本包脚本的一个 `UserPromptSubmit` 路由，超时为 3 秒，不使用 shell；不增加 `SessionStart` 启动项或启动服务。`--with-recovery` 只增加两个惰性文件。
 - 不取消现有 `disableAllHooks` 或受管理 hook 限制；输出警告，但不会为“启用”而提升权限。
 - 每次修改已有文件前，在目标配置根 `backups/cc-workflow-kit-时间戳-随机值/` 保存原始字节并校验 SHA-256。目录保留相同相对路径，含敏感设置时备份也同样敏感，**不要提交或上传备份**。Windows 权限沿用所在目录 ACL；请选择受保护的配置位置。
 - settings 最后写入；已有文件使用同目录暂存与原子替换，新文件使用独占创建。检测到预像或对象身份变化就停止。
@@ -97,8 +113,8 @@ node .\scripts\install.mjs --replace --with-rules --apply
 
 | 分类 | 技能 |
 | --- | --- |
-| 证据与文件安全 | `verify-before-claim`、`safe-text`、`backup-retention` |
-| API、数据库与后端 | `api-contracts`、`database-safety`、`spring-mybatis`、`rust-engineering` |
+| 证据、接续与文件安全 | `verify-before-claim`、`continuation-audit`、`safe-text`、`backup-retention` |
+| 请求恢复、API、数据库与后端 | `request-recovery`、`api-contracts`、`database-safety`、`spring-mybatis`、`rust-engineering` |
 | 浏览器与性能 | `browser-e2e`、`frontend-a11y`、`visual-detail`、`performance-evidence` |
 | 工程组织与交付 | `windows-project-workflow`、`github-ci-evidence`、`development-delivery`、`parallel-work` |
 | 方案、文档与能力维护 | `plan-review`、`docs-workflow`、`capability-maintenance` |
@@ -115,13 +131,14 @@ node .\scripts\install.mjs --replace --with-rules --apply
 
 ## 验证覆盖
 
-测试保留原有 15 组路由正反例，另覆盖初装、默认预演零写入、幂等复装、现有配置保留、冲突/坏 JSON 零写入、恢复点、可选规则、链接逃逸、并发变化、权限拒绝与写入中断。使用中文、空格、美元符号、单引号和 `&` 的临时路径，直接运行生成配置中的精确 executable/argv。
+Hook 测试覆盖 17 组路由正反例；离线网关测试覆盖 41 个场景，包括上下文续接、摘要检查点、取消、不完整流、有限/显式持续重试、回环监听和无配置时零状态目录写入。安装测试另覆盖初装、默认预演零写入、可选网关惰性复制、幂等复装、现有配置保留、冲突/坏 JSON 零写入、恢复点、可选规则、链接逃逸、并发变化、权限拒绝与写入中断。使用中文、空格、美元符号、单引号和 `&` 的临时路径，直接运行生成配置中的精确 executable/argv。
 
 测试中的权限拒绝和中断由确定性故障注入实现，不代表所有操作系统 ACL、断电或文件系统都已实测。没有远程 CI 或专业项目端到端验证，也不自动创建它们。
 
 ## 目录
 
-- `payload/skills/`：18 个技能与 3 篇浏览器参考。
+- `payload/skills/`：20 个技能与 3 篇浏览器参考。
+- `payload/extensions/request-recovery/`：默认不安装的可选本地网关与使用说明；离线网关测试不安装到用户配置。
 - `payload/agents/`：只读复核代理。
 - `payload/hooks/`：可迁移路由与原有测试；测试脚本不安装到用户配置。
 - `rules/CLAUDE.md`：显式可选的规则模板。

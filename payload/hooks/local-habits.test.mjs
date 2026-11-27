@@ -61,6 +61,44 @@ test('streaming APIs and release checks reuse existing specialists', () => {
   for (const [prompt, skill] of examples) assert.ok(context(prompt)?.includes(`${skill}/SKILL.md`), prompt);
 });
 
+test('request and task recovery route only concrete anomaly cases', () => {
+  const examples = [
+    ['session_turn_limit_exceeded recovery', 'request-recovery'],
+    ['上下文超限续接', 'request-recovery'],
+    ['请求断流后重试', 'request-recovery'],
+    ['并行任务异常终止恢复', 'request-recovery'],
+    ['异常处理要保留 cause', 'request-recovery'],
+    ['批处理失败汇总不能覆盖前一项', 'request-recovery'],
+    ['exception handling preserves cause', 'request-recovery'],
+    ['incomplete SSE response recovery', 'request-recovery'],
+    ['provider timeout retry backoff', 'request-recovery'],
+  ];
+  for (const [prompt, skill] of examples) assert.ok(context(prompt)?.includes(`${skill}/SKILL.md`), prompt);
+  for (const prompt of ['requestXrecovery overview', 'context window overview', 'parallel task tutorial', 'exceptional handling overview']) {
+    assert.equal(context(prompt), undefined, prompt);
+  }
+});
+
+
+test('continuation audits reconcile prior claims before resuming', () => {
+  const examples = [
+    ['继续', 'continuation-audit'],
+    ['continue', 'continuation-audit'],
+    ['继续上次任务', 'continuation-audit'],
+    ['接续当前任务', 'continuation-audit'],
+    ['核对上次交付是否完成', 'continuation-audit'],
+    ['continuation audit checks a validator changed but not rerun', 'continuation-audit'],
+    ['resume task after handoff', 'continuation-audit'],
+  ];
+  for (const [prompt, skill] of examples) assert.ok(context(prompt)?.includes(`${skill}/SKILL.md`), prompt);
+  for (const prompt of ['continue the color palette', 'continuation style guide', '继续演示动画']) {
+    assert.equal(context(prompt), undefined, prompt);
+  }
+  const combined = context('上下文超限后继续上次任务');
+  assert.ok(combined.includes('request-recovery/SKILL.md'));
+  assert.ok(combined.includes('continuation-audit/SKILL.md'));
+});
+
 test('specific skills route before generic verification and remain bounded', () => {
   const output = context('验证 database migration and backfill');
   assert.ok(output.includes('database-safety/SKILL.md'));

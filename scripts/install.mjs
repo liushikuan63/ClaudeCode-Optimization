@@ -4,7 +4,7 @@ import os from 'node:os';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { KIT_ROOT, MAX_FILE_BYTES, PAYLOAD_FILES, assertImage, assertNoLinks, decode, digest, image, inside, isObject, validateKit } from './kit.mjs';
+import { KIT_ROOT, MAX_FILE_BYTES, PAYLOAD_FILES, RECOVERY_FILES, assertImage, assertNoLinks, decode, digest, image, inside, isObject, validateKit } from './kit.mjs';
 
 const BEGIN = '<!-- cc-workflow-kit:begin -->';
 const END = '<!-- cc-workflow-kit:end -->';
@@ -82,7 +82,7 @@ function mergeRules(before, template, replace) {
   return Buffer.from(previous.slice(0, start) + block + previous.slice(finish));
 }
 
-export function planInstall({ configDir, withRules = false, replace = false, kitRoot = KIT_ROOT } = {}) {
+export function planInstall({ configDir, withRules = false, withRecovery = false, replace = false, kitRoot = KIT_ROOT } = {}) {
   if (Number(process.versions.node.split('.')[0]) < 22) throw new Error('Node.js 22 or newer is required');
   const root = path.resolve(configDir || process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude'));
   const sourceRoot = path.resolve(kitRoot);
@@ -94,7 +94,8 @@ export function planInstall({ configDir, withRules = false, replace = false, kit
   if (fs.existsSync(root) && !fs.statSync(root).isDirectory()) throw new Error('Configuration root is not a directory');
   const { files } = validateKit(sourceRoot);
   const entries = [];
-  for (const relative of PAYLOAD_FILES) {
+  const payloadFiles = [...PAYLOAD_FILES, ...(withRecovery ? RECOVERY_FILES : [])];
+  for (const relative of payloadFiles) {
     const target = inside(root, relative);
     const before = image(target);
     const data = files.get(`payload/${relative}`).data;
@@ -200,16 +201,17 @@ function main() {
       'dry-run': { type: 'boolean', default: false },
       replace: { type: 'boolean', default: false },
       'with-rules': { type: 'boolean', default: false },
+      'with-recovery': { type: 'boolean', default: false },
       'config-dir': { type: 'string' },
       help: { type: 'boolean', default: false },
     } });
     if (values.help) {
-      process.stdout.write('node scripts/install.mjs [--config-dir PATH] [--with-rules] [--replace] [--apply | --dry-run]\nDefault: read-only preview. --replace backs up conflicting files before replacement.\n');
+      process.stdout.write('node scripts/install.mjs [--config-dir PATH] [--with-rules] [--with-recovery] [--replace] [--apply | --dry-run]\nDefault: read-only preview. --replace backs up conflicting files before replacement. --with-recovery installs the inert gateway files only.\n');
       return;
     }
     if (values.apply && values['dry-run']) throw new Error('Choose --apply or --dry-run, not both');
     if (values['config-dir'] === '') throw new Error('--config-dir must not be empty');
-    const plan = planInstall({ configDir: values['config-dir'], withRules: values['with-rules'], replace: values.replace });
+    const plan = planInstall({ configDir: values['config-dir'], withRules: values['with-rules'], withRecovery: values['with-recovery'], replace: values.replace });
     const report = values.apply ? applyInstall(plan) : { ...describePlan(plan), applied: false };
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
   } catch (error) {
