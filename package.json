@@ -1,0 +1,13 @@
+{
+  "name": "cc-workflow-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portable Claude Code skills, optional collaboration rules, and a bounded prompt hook",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test payload/hooks/local-habits.test.mjs tests/install.test.mjs",
+    "validate": "node scripts/validate.mjs",
+    "install:preview": "node scripts/install.mjs"
+  }
+}
