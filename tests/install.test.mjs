@@ -5,7 +5,7 @@ import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { applyInstall, planInstall } from '../scripts/install.mjs';
-import { KIT_ROOT, PACKAGE_FILES, PAYLOAD_FILES, RECOVERY_FILES, assertNoLinks, digest, inside, validateKit } from '../scripts/kit.mjs';
+import { ASSET_MANIFEST_FILES, buildAssetManifests, KIT_ROOT, PACKAGE_FILES, PAYLOAD_FILES, RECOVERY_FILES, assertNoLinks, digest, inside, validateKit } from '../scripts/kit.mjs';
 
 const cli = path.join(KIT_ROOT, 'scripts/install.mjs');
 function fixture(t) {
@@ -55,7 +55,30 @@ function copyKit(target) {
 }
 
 test('package allowlist, frontmatter, routes and all five local references validate', () => {
-  assert.deepEqual(validateKit().summary, { packageFiles: 38, skills: 20, skillMarkdownFiles: 23, localReferences: 5 });
+  assert.deepEqual(validateKit().summary, { packageFiles: 42, skills: 20, skillMarkdownFiles: 23, localReferences: 5 });
+});
+
+test('asset manifests enumerate hashed install and repository assets', () => {
+  const { catalog, skillsManifest } = buildAssetManifests();
+  assert.equal(catalog.counts.managedFiles, 40);
+  assert.equal(catalog.counts.skills, 20);
+  assert.equal(catalog.counts.references, 3);
+  assert.equal(catalog.counts.optional, 3);
+  assert.equal(catalog.counts.tests, 3);
+  assert.deepEqual(catalog.entries.map(entry => entry.path), PACKAGE_FILES.filter(name => !ASSET_MANIFEST_FILES.includes(name)));
+  assert.ok(catalog.entries.every(entry => Number.isInteger(entry.bytes) && /^[a-f0-9]{64}$/.test(entry.sha256)));
+  assert.equal(skillsManifest.skills.length, 20);
+  assert.ok(skillsManifest.skills.every(skill => skill.tier === 'on-demand' && skill.install === 'copy-skill'));
+});
+
+test('stale generated catalog is rejected', t => {
+  const { root } = fixture(t);
+  copyKit(root);
+  const file = path.join(root, 'catalog.json');
+  const catalog = JSON.parse(fs.readFileSync(file, 'utf8'));
+  catalog.package.version = '0.0.0';
+  fs.writeFileSync(file, JSON.stringify(catalog, null, 2));
+  assert.throws(() => validateKit(root), { message: 'Stale asset manifest: catalog.json' });
 });
 
 test('preview performs zero writes, including for a missing configuration root', t => {

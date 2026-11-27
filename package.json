@@ -1,13 +1,19 @@
 {
-  "name": "cc-workflow-kit",
+  "name": "claude-code-optimization",
   "version": "1.0.0",
   "private": true,
-  "description": "Portable Claude Code skills, opt-in request recovery, optional collaboration rules, and a bounded prompt hook",
+  "description": "Portable Claude Code skills, opt-in request recovery, asset manifests, optional collaboration rules, and a bounded prompt hook",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liushikuan63/ClaudeCode-Optimization.git"
+  },
   "type": "module",
   "engines": { "node": ">=22" },
   "scripts": {
     "test": "node --test payload/hooks/local-habits.test.mjs payload/extensions/request-recovery/gateway.test.mjs tests/install.test.mjs",
-    "validate": "node scripts/validate.mjs",
+    "validate": "node scripts/validate.mjs && node scripts/asset-manifest.mjs --check",
+    "assets:write": "node scripts/asset-manifest.mjs --write",
+    "assets:check": "node scripts/asset-manifest.mjs --check",
     "install:preview": "node scripts/install.mjs"
   }
 }

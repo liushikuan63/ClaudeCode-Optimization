@@ -1,8 +1,17 @@
-# CC Workflow Kit
+# ClaudeCode-Optimization
 
 可迁移的 Claude Code 工程协作能力包：**20 个按需技能、3 篇参考、1 个只读复核代理、1 个关键词提示 hook、可选协作规则，以及一个可选的请求恢复网关**。
 
+相关分享包：[Qoder-Optimization](https://github.com/liushikuan63/Qoder-Optimization) · [DSH-Optimization](https://github.com/liushikuan63/DSH-Optimization) · [Codex-Optimization](https://github.com/liushikuan63/Codex-Optimization)。这些仓库面向不同宿主，规则、hook、技能和运行时能力不可直接互换。
+
 这不是整个用户配置目录的备份，也不是跨客户端插件。默认安装不启动或接入请求恢复网关；包中不含用户当前运行进程、模型、供应商、权限、密钥、MCP、会话、记忆、日志或私人项目资料。安装器不联网，不启动模型或服务，不修改其他客户端。
+
+## 清单与资产管理
+
+- [INDEX.md](INDEX.md) 是入口索引；[catalog.json](catalog.json) 为所有受管源文件记录路径、类型、安装模式、字节数和 SHA-256；[skills-manifest.json](skills-manifest.json) 独立列出按需技能及其文件。
+- 清单由 `scripts/asset-manifest.mjs` 从 `scripts/kit.mjs` 的白名单确定性生成。新增、删除或变更包资产后，运行 `npm run assets:write` 更新，再运行 `npm run validate` 检查清单、引用和整体包指纹；`npm test` 含陈旧清单拒绝回归。
+- 清单不自引用自身哈希；包校验器会把两个清单也纳入整体内容指纹。清单中的安装模式区分默认复制、显式可选、仓库维护和仅测试资产。
+- 当前仓库没有发布 Release 或可下载的版本化 ZIP/校验和资产，也没有远程 CI；不要把 GitHub 自动生成的源码快照称为经构建验收的发布包。发布前还需建立并验证固定版本、来源提交、归档成员和 SHA-256，再附上发布说明。
 
 ## 环境与兼容性
 
@@ -26,7 +35,7 @@ node .\scripts\validate.mjs
 npm test
 ```
 
-校验器按 38 个包文件白名单检查：20 个技能的元数据、5 条本地引用、路由清单、代理工具边界、常见凭据格式和源机器路径，以及可选网关文件。不运行网关。该扫描不是“绝无秘密”的证明，分享前仍应审查全部文件。
+- `npm run validate`：校验 42 个包文件白名单、20 个技能的元数据、5 条本地引用、路由清单、代理工具边界、常见凭据格式和源机器路径，并检查机器可读清单是否过期。不会运行网关。该扫描不是“绝无秘密”的证明，分享前仍应审查全部文件。
 
 ### 2. 只读预演
 
@@ -142,7 +151,8 @@ Hook 测试覆盖 17 组路由正反例；离线网关测试覆盖 41 个场景�
 - `payload/agents/`：只读复核代理。
 - `payload/hooks/`：可迁移路由与原有测试；测试脚本不安装到用户配置。
 - `rules/CLAUDE.md`：显式可选的规则模板。
-- `scripts/`：安装、白名单与验证逻辑。
+- `INDEX.md`、`catalog.json`、`skills-manifest.json`：总览、逐文件资产目录和技能清单。
+- `scripts/`：安装、白名单、资产清单生成与验证逻辑。
 - `tests/`：隔离安装与故障边界测试。
 
 本仓库未附加开源许可证；是否公开或授予再分发许可，由仓库拥有者决定。分享包不包含其他客户端的私有执行器、长期历史或未经核验的依赖。

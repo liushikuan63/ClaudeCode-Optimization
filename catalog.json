@@ -1,0 +1,305 @@
+{
+  "schema": "cc-optimization/catalog/v1",
+  "package": {
+    "name": "claude-code-optimization",
+    "version": "1.0.0",
+    "repository": "https://github.com/liushikuan63/ClaudeCode-Optimization.git"
+  },
+  "generated": "deterministic-from-package-bytes",
+  "counts": {
+    "managedFiles": 40,
+    "skills": 20,
+    "references": 3,
+    "optional": 3,
+    "tests": 3
+  },
+  "entries": [
+    {
+      "path": ".gitattributes",
+      "category": "metadata",
+      "install": "default",
+      "bytes": 19,
+      "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c"
+    },
+    {
+      "path": ".gitignore",
+      "category": "metadata",
+      "install": "default",
+      "bytes": 111,
+      "sha256": "5a3c47907adff5390ecda95ad5c0994a582724cc76e592b6687f63ecc22051a5"
+    },
+    {
+      "path": "INDEX.md",
+      "category": "documentation",
+      "install": "repository-only",
+      "bytes": 1721,
+      "sha256": "8cc0ac85649e77f368e494e5524da32c87cc46849b615c86c2bf161842fa7fa1"
+    },
+    {
+      "path": "README.md",
+      "category": "documentation",
+      "install": "repository-only",
+      "bytes": 11243,
+      "sha256": "60d052521acb52971e31a67587696b042ef1db03a3b95d428eafdc36d70e35ac"
+    },
+    {
+      "path": "package.json",
+      "category": "metadata",
+      "install": "repository-only",
+      "bytes": 820,
+      "sha256": "b7ae6ca85fe1bc95c6a340bc215b0b3a613d530e79f9fc5d0ffb22446b47c41c"
+    },
+    {
+      "path": "payload/agents/runtime-truth-verifier.md",
+      "category": "agent",
+      "install": "default",
+      "bytes": 1621,
+      "sha256": "13781a95f5c42a95f3607074bb9d48d9f75619f85f1612638e1fbbc3c891f2e9"
+    },
+    {
+      "path": "payload/extensions/request-recovery/README.md",
+      "category": "extension",
+      "install": "optional: --with-recovery",
+      "bytes": 2036,
+      "sha256": "77c94110b58b1753970e8edd940a5e9002615eaf3b0478cfb5e83be58b790116"
+    },
+    {
+      "path": "payload/extensions/request-recovery/gateway.mjs",
+      "category": "extension",
+      "install": "optional: --with-recovery",
+      "bytes": 40412,
+      "sha256": "a4dc7610ca41f180ed2966e0a08b7d95338a77de09cb538901e50688b83a5bfa"
+    },
+    {
+      "path": "payload/extensions/request-recovery/gateway.test.mjs",
+      "category": "test",
+      "install": "test-only",
+      "bytes": 48707,
+      "sha256": "813922e547f55874b7c4e19aaa9bd01dd83bb900f6a619596332f688f85e5534"
+    },
+    {
+      "path": "payload/hooks/local-habits.mjs",
+      "category": "hook",
+      "install": "default",
+      "bytes": 5326,
+      "sha256": "ab9df0936132da60d62a6ed99204f64bbd440663224fdbe1bde14ce032c301a7"
+    },
+    {
+      "path": "payload/hooks/local-habits.test.mjs",
+      "category": "test",
+      "install": "test-only",
+      "bytes": 8368,
+      "sha256": "92eac7c3db95be033563d0f7f5418042e79af9d0a6a23b4154561f52e589264c"
+    },
+    {
+      "path": "payload/skills/api-contracts/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1662,
+      "sha256": "3d999175addfa2ffe1c282c90ea6aead176b4808ce3f1e797f926d12b1e06435"
+    },
+    {
+      "path": "payload/skills/backup-retention/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2257,
+      "sha256": "38dd2a352fe82886cf7456007b479a54a21e82bb3a8ad2b42c1ef5627f5798fe"
+    },
+    {
+      "path": "payload/skills/browser-e2e/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1426,
+      "sha256": "fdcc096297625d53357f93a59e0c86d718d1e34fccd31f4f4ca6afe2da5de7a3"
+    },
+    {
+      "path": "payload/skills/browser-e2e/references/affected-routes-and-viewports.md",
+      "category": "reference",
+      "install": "default",
+      "bytes": 581,
+      "sha256": "82d4f5d18983f15fe206566d3fa05f120128223788ae65bcb8bb57d1e671680c"
+    },
+    {
+      "path": "payload/skills/browser-e2e/references/motion-and-theme.md",
+      "category": "reference",
+      "install": "default",
+      "bytes": 563,
+      "sha256": "5ebf07dfd08db0c0ef42658f1d25f8a14653d451daa2662d0e618ff256a0bbcb"
+    },
+    {
+      "path": "payload/skills/browser-e2e/references/spa-startup-triage.md",
+      "category": "reference",
+      "install": "default",
+      "bytes": 938,
+      "sha256": "97488ec8d5db89da144b8270ec35d8ea9e2cbce825cfbca9a4ef4f0172cba330"
+    },
+    {
+      "path": "payload/skills/capability-maintenance/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2207,
+      "sha256": "7d871cd63346e0bc663718d899a5c61e12e90d7d3a06140335ca89b0e4f4643b"
+    },
+    {
+      "path": "payload/skills/continuation-audit/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2339,
+      "sha256": "afd791849ef39ed2d8cecff0615eee4e38d32d8dcf0d4b1f8296691b34459fea"
+    },
+    {
+      "path": "payload/skills/database-safety/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1404,
+      "sha256": "cb289094559d29e9c78839adf0fef4ac2735853b4c061294e68ac76a6e6351ab"
+    },
+    {
+      "path": "payload/skills/development-delivery/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1549,
+      "sha256": "9b08547441161cabef4342e60b6b8f5b548d78b398334a216a180a41dcb157ed"
+    },
+    {
+      "path": "payload/skills/docs-workflow/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 964,
+      "sha256": "a754173700adaf4a04e4d2b38bb904707b1bbb170c352f927142c51d6fb25e0b"
+    },
+    {
+      "path": "payload/skills/frontend-a11y/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 959,
+      "sha256": "460b6ff3f0fb98ca9514a6a01e8dcd9dda4f80fdf1ecb62b400e339253c3a5ed"
+    },
+    {
+      "path": "payload/skills/github-ci-evidence/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1065,
+      "sha256": "c7479f3782d88ebe3bf7e04f9b505e4471a21fd99802755b67ecf1999280ac76"
+    },
+    {
+      "path": "payload/skills/parallel-work/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1072,
+      "sha256": "078318dcef25ea2c5004d2710aa89aca9cb745bef9a800052117d4581053dcf0"
+    },
+    {
+      "path": "payload/skills/performance-evidence/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 831,
+      "sha256": "e87de4b4c6ed08abdacee5454ff80cceaf431742501bbb634c95b48cc03ff459"
+    },
+    {
+      "path": "payload/skills/plan-review/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 925,
+      "sha256": "d30b6fe95f4adb6471320226e33039288a9d7c0124ddf1ad815f951d84626e39"
+    },
+    {
+      "path": "payload/skills/request-recovery/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2964,
+      "sha256": "62650a37426ad685a810383e60b310500673f7b50f568d95a66d1148162ebe46"
+    },
+    {
+      "path": "payload/skills/rust-engineering/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1323,
+      "sha256": "a320dadd78cafd6e39453fdc1622af9757356ade945040ac5532802b643c9dcb"
+    },
+    {
+      "path": "payload/skills/safe-text/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2149,
+      "sha256": "c3bda9b7c9d8bb0bd9842782420e9791d44939e69df1e826eb7f9138c626e503"
+    },
+    {
+      "path": "payload/skills/spring-mybatis/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1243,
+      "sha256": "cf4bfbe8f4e849d004282c0eecc39ca67629cef950f521c3876af3a9fbcf700a"
+    },
+    {
+      "path": "payload/skills/verify-before-claim/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 2733,
+      "sha256": "3cb970e2929d13d0dd29019bb6a35c1c5293820dba57e57fded495e7211e2b3a"
+    },
+    {
+      "path": "payload/skills/visual-detail/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1012,
+      "sha256": "9659dbebc184b730c2b5046c8cc0875aab1eb2c3d37726a6a92efd21cc449c67"
+    },
+    {
+      "path": "payload/skills/windows-project-workflow/SKILL.md",
+      "category": "skill",
+      "install": "default",
+      "bytes": 1298,
+      "sha256": "65982344b59e3879900d340a4874e03d237ee64d9277d1e01118b62b8853ea34"
+    },
+    {
+      "path": "rules/CLAUDE.md",
+      "category": "rule",
+      "install": "optional: --with-rules",
+      "bytes": 3753,
+      "sha256": "80739e76828cc453d1f508b738d013d15a3784225e5c21cc43ae4902ef95077c"
+    },
+    {
+      "path": "scripts/asset-manifest.mjs",
+      "category": "tool",
+      "install": "repository-only",
+      "bytes": 1432,
+      "sha256": "69f15164c41ac772aaad599d64098298f20fc5ee9c62378c02facb6d83e7ab33"
+    },
+    {
+      "path": "scripts/install.mjs",
+      "category": "tool",
+      "install": "repository-only",
+      "bytes": 11100,
+      "sha256": "eca59241ed060318566297aa5d8daa71df876ab0d9a1c29704c65a572f570052"
+    },
+    {
+      "path": "scripts/kit.mjs",
+      "category": "tool",
+      "install": "repository-only",
+      "bytes": 11738,
+      "sha256": "b3118bb0a87ab1d2647ca5261b8dcc6e1b683a572f733678f906f2ba2fa24023"
+    },
+    {
+      "path": "scripts/validate.mjs",
+      "category": "tool",
+      "install": "repository-only",
+      "bytes": 646,
+      "sha256": "04cb5f269366efaf53ce394f265df1db28a8e34cf3d97c43d763d0d5e7e6c321"
+    },
+    {
+      "path": "tests/install.test.mjs",
+      "category": "test",
+      "install": "test-only",
+      "bytes": 22591,
+      "sha256": "988a975d98febc009367e33ef463048691c9478e82de6e08881e7878c08a499e"
+    }
+  ],
+  "statusLegend": {
+    "default": "复制到用户配置的默认资产",
+    "optional: --with-recovery": "仅在显式选择 --with-recovery 时复制",
+    "optional: --with-rules": "仅在显式选择 --with-rules 时复制",
+    "repository-only": "仓库说明、清单或安装器元数据，不复制到用户配置",
+    "test-only": "仅用于离线测试，不安装到用户配置"
+  }
+}

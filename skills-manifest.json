@@ -1,0 +1,190 @@
+{
+  "package_name": "claude-code-optimization",
+  "version": "1.0.0",
+  "generated": "deterministic-from-package-bytes",
+  "skills": [
+    {
+      "name": "verify-before-claim",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "verify-before-claim",
+      "files": [
+        "payload/skills/verify-before-claim/SKILL.md"
+      ]
+    },
+    {
+      "name": "safe-text",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "safe-text",
+      "files": [
+        "payload/skills/safe-text/SKILL.md"
+      ]
+    },
+    {
+      "name": "backup-retention",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "backup-retention",
+      "files": [
+        "payload/skills/backup-retention/SKILL.md"
+      ]
+    },
+    {
+      "name": "api-contracts",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "api-contracts",
+      "files": [
+        "payload/skills/api-contracts/SKILL.md"
+      ]
+    },
+    {
+      "name": "request-recovery",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "request-recovery",
+      "files": [
+        "payload/skills/request-recovery/SKILL.md"
+      ]
+    },
+    {
+      "name": "continuation-audit",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "continuation-audit",
+      "files": [
+        "payload/skills/continuation-audit/SKILL.md"
+      ]
+    },
+    {
+      "name": "database-safety",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "database-safety",
+      "files": [
+        "payload/skills/database-safety/SKILL.md"
+      ]
+    },
+    {
+      "name": "rust-engineering",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "rust-engineering",
+      "files": [
+        "payload/skills/rust-engineering/SKILL.md"
+      ]
+    },
+    {
+      "name": "spring-mybatis",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "spring-mybatis",
+      "files": [
+        "payload/skills/spring-mybatis/SKILL.md"
+      ]
+    },
+    {
+      "name": "frontend-a11y",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "frontend-a11y",
+      "files": [
+        "payload/skills/frontend-a11y/SKILL.md"
+      ]
+    },
+    {
+      "name": "performance-evidence",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "performance-evidence",
+      "files": [
+        "payload/skills/performance-evidence/SKILL.md"
+      ]
+    },
+    {
+      "name": "browser-e2e",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "browser-e2e",
+      "files": [
+        "payload/skills/browser-e2e/SKILL.md",
+        "payload/skills/browser-e2e/references/affected-routes-and-viewports.md",
+        "payload/skills/browser-e2e/references/spa-startup-triage.md",
+        "payload/skills/browser-e2e/references/motion-and-theme.md"
+      ]
+    },
+    {
+      "name": "windows-project-workflow",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "windows-project-workflow",
+      "files": [
+        "payload/skills/windows-project-workflow/SKILL.md"
+      ]
+    },
+    {
+      "name": "github-ci-evidence",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "github-ci-evidence",
+      "files": [
+        "payload/skills/github-ci-evidence/SKILL.md"
+      ]
+    },
+    {
+      "name": "development-delivery",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "development-delivery",
+      "files": [
+        "payload/skills/development-delivery/SKILL.md"
+      ]
+    },
+    {
+      "name": "parallel-work",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "parallel-work",
+      "files": [
+        "payload/skills/parallel-work/SKILL.md"
+      ]
+    },
+    {
+      "name": "plan-review",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "plan-review",
+      "files": [
+        "payload/skills/plan-review/SKILL.md"
+      ]
+    },
+    {
+      "name": "visual-detail",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "visual-detail",
+      "files": [
+        "payload/skills/visual-detail/SKILL.md"
+      ]
+    },
+    {
+      "name": "docs-workflow",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "docs-workflow",
+      "files": [
+        "payload/skills/docs-workflow/SKILL.md"
+      ]
+    },
+    {
+      "name": "capability-maintenance",
+      "tier": "on-demand",
+      "install": "copy-skill",
+      "route": "capability-maintenance",
+      "files": [
+        "payload/skills/capability-maintenance/SKILL.md"
+      ]
+    }
+  ]
+}

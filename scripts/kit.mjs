@@ -23,14 +23,16 @@ export const RECOVERY_FILES = [
   'extensions/request-recovery/gateway.mjs',
   'extensions/request-recovery/README.md',
 ];
+export const ASSET_MANIFEST_FILES = ['catalog.json', 'skills-manifest.json'];
 export const PACKAGE_FILES = [
   ...PAYLOAD_FILES.map(name => `payload/${name}`),
   ...RECOVERY_FILES.map(name => `payload/${name}`),
   'payload/hooks/local-habits.test.mjs',
   'payload/extensions/request-recovery/gateway.test.mjs',
   'rules/CLAUDE.md',
-  'README.md', 'package.json', '.gitignore', '.gitattributes',
-  'scripts/kit.mjs', 'scripts/install.mjs', 'scripts/validate.mjs',
+  'INDEX.md', 'README.md', 'catalog.json', 'skills-manifest.json',
+  'package.json', '.gitignore', '.gitattributes',
+  'scripts/asset-manifest.mjs', 'scripts/kit.mjs', 'scripts/install.mjs', 'scripts/validate.mjs',
   'tests/install.test.mjs',
 ].sort();
 
@@ -111,6 +113,84 @@ function tree(root, prefix = '') {
   return entries.sort();
 }
 
+function assetCategory(relative) {
+  if (relative.startsWith('tests/') || relative.endsWith('.test.mjs')) return 'test';
+  if (relative.startsWith('payload/skills/') && relative.includes('/references/')) return 'reference';
+  if (relative.startsWith('payload/skills/')) return 'skill';
+  if (relative.startsWith('payload/agents/')) return 'agent';
+  if (relative.startsWith('payload/hooks/')) return 'hook';
+  if (relative.startsWith('payload/extensions/')) return 'extension';
+  if (relative.startsWith('rules/')) return 'rule';
+  if (relative.startsWith('scripts/')) return 'tool';
+  if (relative === 'README.md' || relative === 'INDEX.md') return 'documentation';
+  return 'metadata';
+}
+
+function assetInstallMode(relative) {
+  if (assetCategory(relative) === 'test') return 'test-only';
+  if (relative.startsWith('payload/extensions/')) return 'optional: --with-recovery';
+  if (relative === 'rules/CLAUDE.md') return 'optional: --with-rules';
+  if (assetCategory(relative) === 'tool' || assetCategory(relative) === 'documentation' || relative.endsWith('.json')) return 'repository-only';
+  return 'default';
+}
+
+export function buildAssetManifests(root = KIT_ROOT, sourceFiles = null) {
+  const managedNames = PACKAGE_FILES.filter(name => !ASSET_MANIFEST_FILES.includes(name));
+  const files = sourceFiles ?? new Map(managedNames.map(name => [name, image(inside(root, name))]));
+  const packageData = JSON.parse(decode(files.get('package.json').data));
+  const entries = managedNames.map(relative => ({
+    path: relative,
+    category: assetCategory(relative),
+    install: assetInstallMode(relative),
+    bytes: files.get(relative).data.length,
+    sha256: files.get(relative).sha256,
+  }));
+  const catalog = {
+    schema: 'cc-optimization/catalog/v1',
+    package: {
+      name: packageData.name,
+      version: packageData.version,
+      repository: packageData.repository?.url ?? null,
+    },
+    generated: 'deterministic-from-package-bytes',
+    counts: {
+      managedFiles: entries.length,
+      skills: SKILLS.length,
+      references: entries.filter(entry => entry.category === 'reference').length,
+      optional: entries.filter(entry => entry.install.startsWith('optional:')).length,
+      tests: entries.filter(entry => entry.category === 'test').length,
+    },
+    entries,
+    statusLegend: {
+      default: '复制到用户配置的默认资产',
+      'optional: --with-recovery': '仅在显式选择 --with-recovery 时复制',
+      'optional: --with-rules': '仅在显式选择 --with-rules 时复制',
+      'repository-only': '仓库说明、清单或安装器元数据，不复制到用户配置',
+      'test-only': '仅用于离线测试，不安装到用户配置',
+    },
+  };
+  const skillsManifest = {
+    package_name: packageData.name,
+    version: packageData.version,
+    generated: 'deterministic-from-package-bytes',
+    skills: SKILLS.map(name => ({
+      name,
+      tier: 'on-demand',
+      install: 'copy-skill',
+      route: name,
+      files: [
+        `payload/skills/${name}/SKILL.md`,
+        ...(name === 'browser-e2e' ? [
+          'payload/skills/browser-e2e/references/affected-routes-and-viewports.md',
+          'payload/skills/browser-e2e/references/spa-startup-triage.md',
+          'payload/skills/browser-e2e/references/motion-and-theme.md',
+        ] : []),
+      ],
+    })),
+  };
+  return { catalog, skillsManifest };
+}
+
 export function validateKit(root = KIT_ROOT) {
   assertNoLinks(root);
   const names = tree(root);
@@ -154,6 +234,17 @@ export function validateKit(root = KIT_ROOT) {
   const pkg = JSON.parse(decode(files.get('package.json').data));
   if (pkg.private !== true || pkg.dependencies || pkg.devDependencies || pkg.scripts?.postinstall) {
     throw new Error('Unexpected package dependencies or publish/install settings');
+  }
+  const generated = buildAssetManifests(root, files);
+  const expectedManifests = {
+    'catalog.json': generated.catalog,
+    'skills-manifest.json': generated.skillsManifest,
+  };
+  for (const [relative, expected] of Object.entries(expectedManifests)) {
+    let actual;
+    try { actual = JSON.parse(decode(files.get(relative).data)); }
+    catch { throw new Error(`Invalid generated manifest: ${relative}`); }
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new Error(`Stale asset manifest: ${relative}`);
   }
   return { files, summary: { packageFiles: names.length, skills: SKILLS.length, skillMarkdownFiles: 23, localReferences: references } };
 }
