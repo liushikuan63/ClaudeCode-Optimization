@@ -16,7 +16,7 @@ This is not a backup of a user's entire configuration or a cross-client plugin. 
 | --- | --- | --- | --- |
 | **v0.0.1 (current)** | 2026-11-28 | Initial package: 20 skills, an opt-in recovery gateway, and a guarded installer with deterministic asset manifests. | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
 
-[Browse all version tags](https://github.com/liushikuan63/ClaudeCode-Optimization/tags) for current and historical source snapshots. After extracting, run `node scripts/validate.mjs` and `npm test` from the package directory before installation. GitHub-generated tag archives are source snapshots, not separately built Release packages, and currently have no archive-level `.sha256` attachment. The catalog hashes the managed files inside the package.
+[Browse all version tags](https://github.com/liushikuan63/ClaudeCode-Optimization/tags) for current and historical source snapshots. **To download from the tags page**, select the ZIP or tar.gz archive link beside the desired tag, or open the tag and use GitHub's source archive downloads. For a direct archive URL, replace `v0.0.1` in the links above with the exact tag name. GitHub generates this tags page, so it cannot host custom per-version instructions; this README provides them. Only `v0.0.1` is published today, and each future tagged version should be added to this table. After extracting, run `node scripts/validate.mjs` and `npm test` from the package directory before installation. GitHub-generated tag archives are source snapshots, not separately built Release packages, and currently have no archive-level `.sha256` attachment. The catalog hashes the managed files inside the package.
 
 ### Asset manifests
 
@@ -183,7 +183,7 @@ This repository does not include an open-source license; public visibility does 
 | --- | --- | --- | --- |
 | **v0.0.1（当前）** | 2026-11-28 | 首个分享包：20 个技能、可选请求恢复网关，以及带确定性资产清单的防护型安装器。 | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
 
-[浏览全部版本标签](https://github.com/liushikuan63/ClaudeCode-Optimization/tags)可查看当前及历史源码快照。下载并解压后，按“安装”章节先运行 `node scripts/validate.mjs` 与 `npm test`。GitHub 自动生成的 tag 归档是源码快照，不是单独构建的 Release 包，目前没有归档级 `.sha256` 附件；清单中的 SHA-256 用于校验包内受管文件。
+[浏览全部版本标签](https://github.com/liushikuan63/ClaudeCode-Optimization/tags)可查看当前及历史源码快照。**在标签页下载**：选择目标标签旁的 ZIP 或 tar.gz 归档链接，也可以打开标签后选择 GitHub 提供的源码归档下载。直接构造归档链接时，把上方链接中的 `v0.0.1` 替换为目标标签名即可。GitHub 的标签页由平台生成，不能直接添加自定义的逐版本说明，因此这里提供下载指引。目前仅发布了 `v0.0.1`；后续每个带标签的版本都应加入此表。下载并解压后，按“安装”章节先运行 `node scripts/validate.mjs` 与 `npm test`。GitHub 自动生成的 tag 归档是源码快照，不是单独构建的 Release 包，目前没有归档级 `.sha256` 附件；清单中的 SHA-256 用于校验包内受管文件。
 
 ## 清单与资产管理
 

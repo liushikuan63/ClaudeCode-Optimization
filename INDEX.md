@@ -1,6 +1,6 @@
 # ClaudeCode-Optimization Index
 
-This repository is a public source tree for an opt-in Claude Code toolkit. Start with the [README](README.md) for compatibility, installation, privacy boundaries, and test coverage.
+This repository is a public source tree for an opt-in Claude Code toolkit. Start with the [README](README.md) for version downloads and tag-specific download steps, compatibility, installation, privacy boundaries, and test coverage.
 
 ## Package inventory
 
