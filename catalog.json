@@ -2,7 +2,7 @@
   "schema": "cc-optimization/catalog/v1",
   "package": {
     "name": "claude-code-optimization",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "repository": "https://github.com/liushikuan63/ClaudeCode-Optimization.git"
   },
   "generated": "deterministic-from-package-bytes",
@@ -47,7 +47,7 @@
       "category": "metadata",
       "install": "repository-only",
       "bytes": 820,
-      "sha256": "b7ae6ca85fe1bc95c6a340bc215b0b3a613d530e79f9fc5d0ffb22446b47c41c"
+      "sha256": "053e1765ea2fb8228ae5fce5e8333fb48cbe6115f0b899be91ae67fa47df70d3"
     },
     {
       "path": "payload/agents/runtime-truth-verifier.md",

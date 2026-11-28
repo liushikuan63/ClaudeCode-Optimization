@@ -1,6 +1,6 @@
 {
   "name": "claude-code-optimization",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Portable Claude Code skills, opt-in request recovery, asset manifests, optional collaboration rules, and a bounded prompt hook",
   "repository": {
