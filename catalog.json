@@ -32,15 +32,15 @@
       "path": "INDEX.md",
       "category": "documentation",
       "install": "repository-only",
-      "bytes": 1772,
-      "sha256": "cea0d4699da7ab95987c9059fea5f52ce87fb64547f25c9a3fc1d50d6aa31afc"
+      "bytes": 1784,
+      "sha256": "4e6cee0e05d8c75e28d2be925e68333fb4a736ebc7bb36b9e8f8810bae5a7b2b"
     },
     {
       "path": "README.md",
       "category": "documentation",
       "install": "repository-only",
-      "bytes": 26012,
-      "sha256": "9363d1487e3d1704f5afe7252a4a213df9e5d1591d0d32a5de0963cc21535d21"
+      "bytes": 26539,
+      "sha256": "8ec45c409334f32f449035f31dca5e1886eda32c1954a420d22b17bd32b203bf"
     },
     {
       "path": "package.json",

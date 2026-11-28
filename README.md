@@ -14,16 +14,16 @@ This is not a backup of a user's entire configuration or a cross-client plugin. 
 
 | Version | Date | Highlights | Downloads |
 | --- | --- | --- | --- |
-| **v0.0.1 (current)** | 2026-11-28 | Initial package: 20 skills, an opt-in recovery gateway, and a guarded installer with deterministic asset manifests. | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
+| **v0.0.1 (current)** | 2026-11-28 | Initial package: 20 skills, an opt-in recovery gateway, and a guarded installer with deterministic asset manifests. | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) · [Release notes](https://github.com/liushikuan63/ClaudeCode-Optimization/releases/tag/v0.0.1) |
 
-[Browse all version tags](https://github.com/liushikuan63/ClaudeCode-Optimization/tags) for current and historical source snapshots. **To download from the tags page**, select the ZIP or tar.gz archive link beside the desired tag, or open the tag and use GitHub's source archive downloads. For a direct archive URL, replace `v0.0.1` in the links above with the exact tag name. GitHub generates this tags page, so it cannot host custom per-version instructions; this README provides them. Only `v0.0.1` is published today, and each future tagged version should be added to this table. After extracting, run `node scripts/validate.mjs` and `npm test` from the package directory before installation. GitHub-generated tag archives are source snapshots, not separately built Release packages, and currently have no archive-level `.sha256` attachment. The catalog hashes the managed files inside the package.
+[Browse all version tags](https://github.com/liushikuan63/ClaudeCode-Optimization/tags) for current and historical source snapshots. **To download from the tags page**, select the ZIP or tar.gz archive link beside the desired tag, or open the tag and use GitHub's source archive downloads. For a direct archive URL, replace `v0.0.1` in the links above with the exact tag name. GitHub generates this tags page, so its tag list itself cannot host custom per-version instructions; the [v0.0.1 Release page](https://github.com/liushikuan63/ClaudeCode-Optimization/releases/tag/v0.0.1) now provides bilingual version notes and download guidance. Only `v0.0.1` is published today, and each future tagged version should be added to this table. After extracting, run `node scripts/validate.mjs` and `npm test` from the package directory before installation. The Release page provides GitHub-generated source archives only; there is no separately built binary or archive-level `.sha256` attachment. The catalog hashes the managed files inside the package.
 
 ### Asset manifests
 
 - [INDEX.md](INDEX.md) is the entry point; [catalog.json](catalog.json) records the path, category, installation mode, byte size, and SHA-256 of each managed source file; [skills-manifest.json](skills-manifest.json) lists the on-demand skills and their files.
 - `scripts/asset-manifest.mjs` deterministically generates the manifests from the allowlist in `scripts/kit.mjs`. After changing package assets, run `npm run assets:write`, then `npm run validate`; `npm test` includes a stale-manifest regression test.
 - The manifests do not hash themselves. The package validator includes both manifests in the overall package fingerprint. Installation modes distinguish default, explicitly optional, repository-only, and test-only files.
-- Only GitHub-generated tag source archives are currently provided; there is no separately built Release package, archive checksum attachment, or remote CI. A source archive is not an independently built and accepted release artifact.
+- The v0.0.1 Release page provides bilingual notes and GitHub-generated source archives; no separately built binary package or archive SHA-256 attachment is provided, and no remote CI is configured. A source archive is not an independently built and accepted release artifact.
 
 ### Compatibility
 
@@ -181,16 +181,16 @@ This repository does not include an open-source license; public visibility does 
 
 | 版本 | 日期 | 主要内容 | 下载 |
 | --- | --- | --- | --- |
-| **v0.0.1（当前）** | 2026-11-28 | 首个分享包：20 个技能、可选请求恢复网关，以及带确定性资产清单的防护型安装器。 | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
+| **v0.0.1（当前）** | 2026-11-28 | 首个分享包：20 个技能、可选请求恢复网关，以及带确定性资产清单的防护型安装器。 | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) · [发布说明](https://github.com/liushikuan63/ClaudeCode-Optimization/releases/tag/v0.0.1) |
 
-[浏览全部版本标签](https://github.com/liushikuan63/ClaudeCode-Optimization/tags)可查看当前及历史源码快照。**在标签页下载**：选择目标标签旁的 ZIP 或 tar.gz 归档链接，也可以打开标签后选择 GitHub 提供的源码归档下载。直接构造归档链接时，把上方链接中的 `v0.0.1` 替换为目标标签名即可。GitHub 的标签页由平台生成，不能直接添加自定义的逐版本说明，因此这里提供下载指引。目前仅发布了 `v0.0.1`；后续每个带标签的版本都应加入此表。下载并解压后，按“安装”章节先运行 `node scripts/validate.mjs` 与 `npm test`。GitHub 自动生成的 tag 归档是源码快照，不是单独构建的 Release 包，目前没有归档级 `.sha256` 附件；清单中的 SHA-256 用于校验包内受管文件。
+[浏览全部版本标签](https://github.com/liushikuan63/ClaudeCode-Optimization/tags)可查看当前及历史源码快照。**在标签页下载**：选择目标标签旁的 ZIP 或 tar.gz 归档链接，也可以打开标签后选择 GitHub 提供的源码归档下载。直接构造归档链接时，把上方链接中的 `v0.0.1` 替换为目标标签名即可。GitHub 的标签页由平台生成，标签列表本身不能添加自定义逐版本说明；[v0.0.1 发布页](https://github.com/liushikuan63/ClaudeCode-Optimization/releases/tag/v0.0.1)现已提供双语版本说明和下载指引。目前仅发布了 `v0.0.1`；后续每个带标签的版本都应加入此表。下载并解压后，按“安装”章节先运行 `node scripts/validate.mjs` 与 `npm test`。发布页提供的是 GitHub 自动生成的源码归档；没有单独构建的二进制包或归档级 `.sha256` 附件。清单中的 SHA-256 用于校验包内受管文件。
 
 ## 清单与资产管理
 
 - [INDEX.md](INDEX.md) 是入口索引；[catalog.json](catalog.json) 为所有受管源文件记录路径、类型、安装模式、字节数和 SHA-256；[skills-manifest.json](skills-manifest.json) 独立列出按需技能及其文件。
 - 清单由 `scripts/asset-manifest.mjs` 从 `scripts/kit.mjs` 的白名单确定性生成。新增、删除或变更包资产后，运行 `npm run assets:write` 更新，再运行 `npm run validate` 检查清单、引用和整体包指纹；`npm test` 含陈旧清单拒绝回归。
 - 清单不自引用自身哈希；包校验器会把两个清单也纳入整体内容指纹。清单中的安装模式区分默认复制、显式可选、仓库维护和仅测试资产。
-- 当前仅提供 GitHub 自动生成的 tag 源码归档；尚无单独构建的 Release 包、归档 SHA-256 附件或远程 CI。源码归档不等同于经过独立构建验收的发布资产。
+- v0.0.1 发布页提供双语说明和 GitHub 自动生成的源码归档；没有单独构建的二进制包或归档 SHA-256 附件，仓库也未配置远程 CI。源码归档不等同于经过独立构建验收的发布资产。
 
 ## 环境与兼容性
 
