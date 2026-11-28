@@ -1,17 +1,196 @@
 # ClaudeCode-Optimization
 
+[English](#english) | [简体中文](#简体中文)
+
+## English
+
+A portable Claude Code workflow toolkit with **20 on-demand skills, 3 references, 1 read-only verifier agent, 1 keyword prompt hook, optional collaboration rules, and an optional request-recovery gateway**.
+
+Related toolkits: [Qoder-Optimization](https://github.com/liushikuan63/Qoder-Optimization) · [DSH-Optimization](https://github.com/liushikuan63/DSH-Optimization) · [Codex-Optimization](https://github.com/liushikuan63/Codex-Optimization). Each targets a different host; their rules, hooks, skills, and runtime behavior are not interchangeable.
+
+This is not a backup of a user's entire configuration or a cross-client plugin. Default installation does not install or connect the recovery gateway. The package excludes running processes, models, providers, permissions, keys, MCP configuration, sessions, memories, logs, and private project data. The installer does not access the network, start a model or service, or modify other clients.
+
+### Download and versions
+
+| Version | Date | Highlights | Downloads |
+| --- | --- | --- | --- |
+| **v0.0.1 (current)** | 2026-11-28 | Initial package: 20 skills, an opt-in recovery gateway, and a guarded installer with deterministic asset manifests. | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
+
+[Browse all version tags](https://github.com/liushikuan63/ClaudeCode-Optimization/tags) for current and historical source snapshots. After extracting, run `node scripts/validate.mjs` and `npm test` from the package directory before installation. GitHub-generated tag archives are source snapshots, not separately built Release packages, and currently have no archive-level `.sha256` attachment. The catalog hashes the managed files inside the package.
+
+### Asset manifests
+
+- [INDEX.md](INDEX.md) is the entry point; [catalog.json](catalog.json) records the path, category, installation mode, byte size, and SHA-256 of each managed source file; [skills-manifest.json](skills-manifest.json) lists the on-demand skills and their files.
+- `scripts/asset-manifest.mjs` deterministically generates the manifests from the allowlist in `scripts/kit.mjs`. After changing package assets, run `npm run assets:write`, then `npm run validate`; `npm test` includes a stale-manifest regression test.
+- The manifests do not hash themselves. The package validator includes both manifests in the overall package fingerprint. Installation modes distinguish default, explicitly optional, repository-only, and test-only files.
+- Only GitHub-generated tag source archives are currently provided; there is no separately built Release package, archive checksum attachment, or remote CI. A source archive is not an independently built and accepted release artifact.
+
+### Compatibility
+
+- Node.js **22+**; built-in modules only, with no third-party dependencies or `npm install` requirement.
+- The receiving Claude Code host must support command hooks in **`command` + `args` exec form**. See the [official hooks contract](https://code.claude.com/docs/en/hooks). The documented field has no stated minimum host version; this package does not guess one or fall back to shell-string invocation.
+- Installation uses the current Node executable path. Re-preview and verify installation if Node or the configuration directory moves.
+- Desktop, CLI, and IDE hosts may expose different capabilities. Skills use only tools available in the active host; Browser, PR monitoring, MCP, and desktop control are not guaranteed.
+- Isolated tests do not prove that the receiving host loaded a skill or dispatched a hook.
+
+### Installation
+
+Extract the archive or use the repository root. The target is the **user-level configuration root**, not a project's `.claude` directory.
+
+#### 1. Validate and test
+
+```powershell
+node .\scripts\validate.mjs
+```
+
+```powershell
+npm test
+```
+
+`npm run validate` checks the 42-file package allowlist, metadata for 20 skills, 5 local references, routing, verifier-tool boundaries, common credential patterns, source-machine paths, and manifest freshness. It does not run the gateway. This scan cannot prove that no secret exists; review all files before sharing.
+
+#### 2. Preview without writing
+
+```powershell
+node .\scripts\install.mjs
+```
+
+The default target is `CLAUDE_CONFIG_DIR`, or `~/.claude` when unset. Preview reports the target, proposed additions/updates, and warnings without creating a directory or backup.
+
+To preview against a separate directory:
+
+```powershell
+node .\scripts\install.mjs --config-dir ..\cc-kit-demo-config
+```
+
+#### 3. Apply after confirming the target
+
+Stop other processes that may concurrently edit the same configuration files, then run:
+
+```powershell
+node .\scripts\install.mjs --apply
+```
+
+To apply to the isolated demo directory:
+
+```powershell
+node .\scripts\install.mjs --config-dir ..\cc-kit-demo-config --apply
+```
+
+`--config-dir` takes precedence over the environment variable. In PowerShell, quote a path with spaces or special characters as one argument. The installer does not move existing configuration or change environment variables.
+
+#### Optional rules and conflicts
+
+`CLAUDE.md` is not installed by default, so language and collaboration preferences do not silently become recipient rules. Review [the optional template](rules/CLAUDE.md) and explicitly preview or apply it:
+
+```powershell
+node .\scripts\install.mjs --with-rules
+```
+
+```powershell
+node .\scripts\install.mjs --with-rules --apply
+```
+
+Rules are merged once inside the `cc-workflow-kit:begin/end` markers while preserving recipient text. Modified same-name skills, agents, hooks, or rule blocks are rejected by default. Only after reviewing the diff, use `--replace` to replace targets explicitly listed by the package:
+
+```powershell
+node .\scripts\install.mjs --replace --with-rules
+```
+
+```powershell
+node .\scripts\install.mjs --replace --with-rules --apply
+```
+
+`--replace` does not remove files outside the package allowlist and does not authorize publishing, committing, deployment, or other actions.
+
+### Optional request-recovery gateway
+
+The recovery runtime is not installed by default. Preview the opt-in files first:
+
+```powershell
+node .\scripts\install.mjs --with-recovery
+```
+
+After reviewing the changes, apply them explicitly:
+
+```powershell
+node .\scripts\install.mjs --with-recovery --apply
+```
+
+This option only copies `extensions/request-recovery/gateway.mjs` and its guide. It adds no `SessionStart` hook, starts no process, and changes no model, provider, CC Switch setting, or credentials. You must start the gateway manually and explicitly supply a local HTTP upstream and unused listener port; it binds only to loopback. Recovery summaries send conversation history to that same upstream and may incur cost; local checkpoints and diagnostics may be sensitive. Default retries are bounded; continuing retries require explicit opt-in. See the [gateway guide](payload/extensions/request-recovery/README.md) for installation and privacy boundaries.
+
+### Installation behavior and recovery
+
+- The installer checks the complete package, all target files, UTF-8 JSON, and hook field shapes before writing. Inputs and generated files over 8 MiB are rejected before backup or writes; reversed, missing, or duplicate rule markers are rejected. Path traversal, symlinks, junctions, and multiply hard-linked targets are refused.
+- Identical files are skipped. Other `settings.json` fields, events, and hooks are preserved. Normal installation only adds or updates one `UserPromptSubmit` router hook pointing to the package script, with a 3-second timeout and no shell invocation. It adds no `SessionStart` entry or service; `--with-recovery` adds only two inert files.
+- Existing `disableAllHooks` and managed-hook restrictions are not overridden; the installer warns rather than escalating permissions to enable itself.
+- Before modifying an existing file, original bytes are saved under `backups/cc-workflow-kit-timestamp-random/` beneath the target configuration root and verified by SHA-256. Backups mirror relative paths and may contain sensitive settings: **never commit or upload them**. Windows ACLs are inherited from the containing directory; use a protected configuration location.
+- Settings are written last. Existing files use same-directory staging and atomic replacement; new files use exclusive creation. Changes in file content or identity stop the operation.
+- **This is not a cross-file atomic transaction and does not lock concurrent writers.** A filesystem race remains between checking and replacement, so do not install while another writer is active. Runtime failures may leave some files written; the error reports `written`, `attempted`, and `backupDir` without blindly overwriting later changes during rollback.
+- Before restoring, compare current files with the report, preserve changes made by other sessions, and restore only the necessary files from their matching backups. Newly created files have no previous version; do not delete the whole directory.
+- The installer does not prune old recovery points. Retention guidance in the `backup-retention` skill is not an active cleanup service.
+
+### Skills and review agent
+
+| Area | Skills |
+| --- | --- |
+| Evidence, continuity, and file safety | `verify-before-claim`, `continuation-audit`, `safe-text`, `backup-retention` |
+| Recovery, APIs, databases, and backend | `request-recovery`, `api-contracts`, `database-safety`, `spring-mybatis`, `rust-engineering` |
+| Browser and performance | `browser-e2e`, `frontend-a11y`, `visual-detail`, `performance-evidence` |
+| Engineering workflow and delivery | `windows-project-workflow`, `github-ci-evidence`, `development-delivery`, `parallel-work` |
+| Planning, docs, and capability maintenance | `plan-review`, `docs-workflow`, `capability-maintenance` |
+
+The [read-only verifier agent](payload/agents/runtime-truth-verifier.md) can inspect current evidence but cannot authorize fixes, write files, start services, or call paid models for the main agent. Listing a tool does not grant additional permission.
+
+### Hook boundaries
+
+[payload/hooks/local-habits.mjs](payload/hooks/local-habits.mjs) derives skill paths from its installation location, matches prompt keywords, and emits at most **2** skill-path hints. It only accepts `UserPromptSubmit`, limits stdin to 1 MiB and prompts to 65,536 UTF-16 code units, and exits silently for unrelated, invalid, or oversized input. It does not echo prompts, persist state, read sessions, approve actions, or act as a security gate.
+
+Keyword hints are discovery aids: they may miss a skill or show only the first two matches. They do not replace main-agent judgment or the Skill tool. Silent pass-through on invalid input is limited to this non-authorizing index hint and must not be reused as a fail-open security gate.
+
+After installation, use a new receiving-host session to verify skill discovery, actual `UserPromptSubmit` dispatch, and task behavior separately. Isolated package tests do not establish those facts.
+
+### Verification coverage
+
+Hook tests cover 17 routing positive and negative cases. Offline gateway tests cover 41 scenarios, including continuation, summary checkpoints, cancellation, incomplete streams, bounded/explicit persistent retries, loopback binding, and zero state-directory writes without configuration. Installer tests cover first install, zero-write default preview, inert optional gateway copying, idempotent reinstall, preserving existing settings, zero-write conflict/invalid JSON cases, recovery points, optional rules, link escape, concurrent changes, permission denial, and interrupted writes. Tests use temporary paths containing Chinese, spaces, dollar signs, apostrophes, and `&`, and execute the exact configured executable/argv.
+
+Permission denial and interruption are deterministic fault injections; they do not establish behavior across every OS ACL, power loss, or filesystem. There is no remote CI or professional-project end-to-end verification, and none is created automatically.
+
+### Repository layout
+
+- `payload/skills/`: 20 skills and 3 browser references.
+- `payload/extensions/request-recovery/`: optional local gateway and guide, not installed by default; offline gateway tests are not installed into user configuration.
+- `payload/agents/`: read-only verifier agent.
+- `payload/hooks/`: portable router and its tests; tests are not installed.
+- `rules/CLAUDE.md`: explicitly optional rules template.
+- `INDEX.md`, `catalog.json`, `skills-manifest.json`: overview, per-file asset catalog, and skills manifest.
+- `scripts/`: installer, allowlist, asset-manifest generator, and validator.
+- `tests/`: isolated installation and failure-boundary tests.
+
+This repository does not include an open-source license; public visibility does not itself grant redistribution rights. The package excludes private executors from other clients, long-term history, and unverified dependencies.
+
+## 简体中文
+
 可迁移的 Claude Code 工程协作能力包：**20 个按需技能、3 篇参考、1 个只读复核代理、1 个关键词提示 hook、可选协作规则，以及一个可选的请求恢复网关**。
 
 相关分享包：[Qoder-Optimization](https://github.com/liushikuan63/Qoder-Optimization) · [DSH-Optimization](https://github.com/liushikuan63/DSH-Optimization) · [Codex-Optimization](https://github.com/liushikuan63/Codex-Optimization)。这些仓库面向不同宿主，规则、hook、技能和运行时能力不可直接互换。
 
 这不是整个用户配置目录的备份，也不是跨客户端插件。默认安装不启动或接入请求恢复网关；包中不含用户当前运行进程、模型、供应商、权限、密钥、MCP、会话、记忆、日志或私人项目资料。安装器不联网，不启动模型或服务，不修改其他客户端。
 
+## 下载与版本
+
+| 版本 | 日期 | 主要内容 | 下载 |
+| --- | --- | --- | --- |
+| **v0.0.1（当前）** | 2026-11-28 | 首个分享包：20 个技能、可选请求恢复网关，以及带确定性资产清单的防护型安装器。 | [ZIP](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.zip) · [tar.gz](https://github.com/liushikuan63/ClaudeCode-Optimization/archive/refs/tags/v0.0.1.tar.gz) |
+
+[浏览全部版本标签](https://github.com/liushikuan63/ClaudeCode-Optimization/tags)可查看当前及历史源码快照。下载并解压后，按“安装”章节先运行 `node scripts/validate.mjs` 与 `npm test`。GitHub 自动生成的 tag 归档是源码快照，不是单独构建的 Release 包，目前没有归档级 `.sha256` 附件；清单中的 SHA-256 用于校验包内受管文件。
+
 ## 清单与资产管理
 
 - [INDEX.md](INDEX.md) 是入口索引；[catalog.json](catalog.json) 为所有受管源文件记录路径、类型、安装模式、字节数和 SHA-256；[skills-manifest.json](skills-manifest.json) 独立列出按需技能及其文件。
 - 清单由 `scripts/asset-manifest.mjs` 从 `scripts/kit.mjs` 的白名单确定性生成。新增、删除或变更包资产后，运行 `npm run assets:write` 更新，再运行 `npm run validate` 检查清单、引用和整体包指纹；`npm test` 含陈旧清单拒绝回归。
 - 清单不自引用自身哈希；包校验器会把两个清单也纳入整体内容指纹。清单中的安装模式区分默认复制、显式可选、仓库维护和仅测试资产。
-- 当前仓库没有发布 Release 或可下载的版本化 ZIP/校验和资产，也没有远程 CI；不要把 GitHub 自动生成的源码快照称为经构建验收的发布包。发布前还需建立并验证固定版本、来源提交、归档成员和 SHA-256，再附上发布说明。
+- 当前仅提供 GitHub 自动生成的 tag 源码归档；尚无单独构建的 Release 包、归档 SHA-256 附件或远程 CI。源码归档不等同于经过独立构建验收的发布资产。
 
 ## 环境与兼容性
 

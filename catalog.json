@@ -39,8 +39,8 @@
       "path": "README.md",
       "category": "documentation",
       "install": "repository-only",
-      "bytes": 11243,
-      "sha256": "60d052521acb52971e31a67587696b042ef1db03a3b95d428eafdc36d70e35ac"
+      "bytes": 25120,
+      "sha256": "b8e92cc6de23a0c89939887557be5bfd867b2274d56fb95b729e5697f4eb6ee6"
     },
     {
       "path": "package.json",
